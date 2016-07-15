@@ -104,10 +104,16 @@ export LLVM_COMMIT = c61d5f4b2cbd0e1f1fd3fc7887c0c2aca405db13
 export CLANG_COMMIT = 543a4302fa7c2926757ecf86f62dd193d66a74e3
 export CLANG_TOOLS_EXTRA_COMMIT = 9600c64c2e228a11a6186af3ac618a45ee2c7009
 
+gitllvm:
+	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
+	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
+	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
+
+
 #
 # Load llvm, clang and extras
 # Apply patch D18035:   http://reviews.llvm.org/D18035
-gitllvm:
+oldgitllvm:
 	-git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
 	-(cd $(LLVM_SOURCE_DIR); git reset --hard $(LLVM_COMMIT))
 	-(cd $(LLVM_SOURCE_DIR)/tools; git clone http://llvm.org/git/clang.git clang)
