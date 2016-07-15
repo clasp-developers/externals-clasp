@@ -180,6 +180,7 @@ endif
 # This removes the llvm source
 #
 really-clean:
+	make clean
 ifneq ($(LLVM_SOURCE_DIR),)
 	rm -rf ./$(LLVM_SOURCE_DIR)
 endif
