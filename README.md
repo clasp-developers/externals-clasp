@@ -13,8 +13,7 @@ _You need to have gcc 4.8 or higher to build externals-clasp._
 
 To build everything from within the top level directory (externals-clasp/) do the following.
 
-1) Type:  _make_    - this will download llvm/clang, build everything.
-
-4) Go to the Clasp library and configure and build it.
+1. Type:  _make_    - this will download llvm/clang, build everything.
+2. Go to the Clasp library and configure and build it.
 
 Clasp will require other libraries that you can install with your package manager
