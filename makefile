@@ -5,7 +5,7 @@ export EXTERNALS_CLASP_HOME ?= $(shell pwd)
 
 include $(wildcard $(EXTERNALS_CLASP_HOME)/local.config)
 
-export BUILTIN_INCLUDES ?= /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
+export BUILTIN_INCLUDES ?= /Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
 
 ######################################################################
 ######################################################################
@@ -104,6 +104,7 @@ export LLVM_SOURCE_DIR = llvm39ToT
 #export CLANG_COMMIT = 543a4302fa7c2926757ecf86f62dd193d66a74e3
 #export CLANG_TOOLS_EXTRA_COMMIT = 9600c64c2e228a11a6186af3ac618a45ee2c7009
 
+# October 21, 2016
 export LLVM_COMMIT = 13656b412f6d3095c81dd3916e80c5dcf59b05dc
 export CLANG_COMMIT = a663b0aee8fef8552996f03415d3e48ee72e838f
 export CLANG_TOOLS_EXTRA_COMMIT = ce95fe531f66b8335bec3f00358a7048f7ad166b
@@ -121,16 +122,22 @@ gitllvm-latest:
 	git clone http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras
 
 
+gitllvm:
+	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
+	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
+	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
+
+
 #
 # Load llvm, clang and extras
 # Apply patch D18035:   http://reviews.llvm.org/D18035
-gitllvm:
+oldgitllvm:
 	-git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
-#	-(cd $(LLVM_SOURCE_DIR); git reset --hard $(LLVM_COMMIT))
+	-(cd $(LLVM_SOURCE_DIR); git reset --hard $(LLVM_COMMIT))
 	-(cd $(LLVM_SOURCE_DIR)/tools; git clone http://llvm.org/git/clang.git clang)
-#	-(cd $(LLVM_SOURCE_DIR)/tools/clang; git reset --hard $(CLANG_COMMIT))
+	-(cd $(LLVM_SOURCE_DIR)/tools/clang; git reset --hard $(CLANG_COMMIT))
 	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools; git clone http://llvm.org/git/clang-tools-extra extras)
-#	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools/extras; git reset --hard $(CLANG_TOOLS_EXTRA_COMMIT))
+	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools/extras; git reset --hard $(CLANG_TOOLS_EXTRA_COMMIT))
 #	-patch -d $(LLVM_SOURCE_DIR)/tools/clang -Np0 < patches/D18035.patch
 #       -(cd $(LLVM_SOURCE_DIR)/tools; git clone http://llvm.org/git/lldb.git lldb)
 
@@ -197,6 +204,7 @@ endif
 # This removes the llvm source
 #
 really-clean:
+	make clean
 ifneq ($(LLVM_SOURCE_DIR),)
 	rm -rf ./$(LLVM_SOURCE_DIR)
 endif
