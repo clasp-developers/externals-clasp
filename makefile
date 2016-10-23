@@ -192,6 +192,7 @@ shell:
 	bash
 
 clean:
+	-rm -rf ./build/*
 	make subClean
 ifneq ($(EXTERNALS_INTERNAL_BUILD_TARGET_DIR),)
 	-(find $(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/release -type f -print0 | xargs -0 rm -f)
@@ -211,7 +212,6 @@ endif
 ifneq ($(BOEHM_SOURCE_DIR),)
 	rm -rf ./$(BOEHM_SOURCE_DIR)
 endif
-
 
 rpath-fix:
 	make llvm-rpath-fix
