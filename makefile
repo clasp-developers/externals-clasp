@@ -203,6 +203,7 @@ endif
 
 #
 # This removes the llvm source
+# and the build directory
 #
 really-clean:
 	make clean
