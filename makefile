@@ -53,6 +53,7 @@ CLASP_APP_RESOURCES_EXTERNALS_RELEASE_LIB_DIR = $(CLASP_APP_RESOURCES_EXTERNALS_
 
 all:
 	make gitllvm
+	make gitlibcxx
 #	make gitboehm
 	make allnoget
 
@@ -115,6 +116,10 @@ gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
+
+gitlibcxx:
+	(cd $(LLVM_SOURCE_DIR)/projects; svn co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx)
+	(cd $(LLVM_SOURCE_DIR)/projects; svn co http://llvm.org/svn/llvm-project/libcxxabi/trunk libcxxabi)
 
 gitllvm-latest:
 	git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
