@@ -273,14 +273,16 @@ llvm-debug:
 
 llvm-release:
 	(cd $(LLVM_SOURCE_DIR)/build-release; make -j$(PJOBS) ; make install)
-	make llvm-release-symlinks
+#	make llvm-release-symlinks
 
+#Depreciated
 llvm-release-symlinks:
 ifeq ($(TARGET_OS),Darwin)
 	install -d build/release/include/c++
 	-ln -s $(BUILTIN_INCLUDES) build/release/include/c++/v1
 endif
 
+#Depreciated
 llvm-debug-symlinks:
 ifeq ($(TARGET_OS),Darwin)
 	install -d build/debug/include/c++
