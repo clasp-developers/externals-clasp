@@ -125,7 +125,7 @@ gitllvm:
 
 gitlibcxx:
 	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
-	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxxabi)
+#	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxxabi)
 
 gitllvm-latest:
 	git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
