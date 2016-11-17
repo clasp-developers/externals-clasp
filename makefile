@@ -50,12 +50,18 @@ export CLASP_APP_RESOURCES_EXTERNALS_COMMON_LIB_DIR = $(CLASP_APP_RESOURCES_EXTE
 CLASP_APP_RESOURCES_EXTERNALS_DEBUG_LIB_DIR = $(CLASP_APP_RESOURCES_EXTERNALS_DEBUG_DIR)/lib
 CLASP_APP_RESOURCES_EXTERNALS_RELEASE_LIB_DIR = $(CLASP_APP_RESOURCES_EXTERNALS_RELEASE_DIR)/lib
 
-
+ifeq ($(TARGET_OS),Darwin)
 all:
 	make gitllvm
 	make gitlibcxx
-#	make gitboehm
 	make allnoget
+endif
+
+ifeq ($(TARGET_OS),Linux)
+all:
+	make gitllvm
+	make allnoget
+endif
 
 devshell:
 	bash
@@ -118,19 +124,13 @@ gitllvm:
 	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
 
 gitlibcxx:
-	(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
-	(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxxabi)
+	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
+	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxxabi)
 
 gitllvm-latest:
 	git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
 	git clone http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang
 	git clone http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras
-
-
-gitllvm:
-	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
-	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
-	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
 
 
 #
