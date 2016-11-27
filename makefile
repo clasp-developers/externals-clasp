@@ -2,6 +2,7 @@
 # Edit local.config for your local configuration
 
 export EXTERNALS_CLASP_HOME ?= $(shell pwd)
+export PJOBS ?= 1
 
 include $(wildcard $(EXTERNALS_CLASP_HOME)/local.config)
 
@@ -122,6 +123,9 @@ gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
+
+git-compiler-rt:
+	git clone https://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt
 
 gitlibcxx:
 	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
@@ -354,6 +358,7 @@ llvm-setup-debug:
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
+			-DLLVM_USE_SANITIZER=Address \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DLLVM_BINUTILS_INCDIR=/usr/include \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
@@ -420,6 +425,7 @@ llvm-setup-debug:
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
+			-DLLVM_USE_SANITIZER=Address \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
