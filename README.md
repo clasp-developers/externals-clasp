@@ -1,5 +1,5 @@
 # externals-clasp
-## An auxiliary repo to assist building Clasp on OS X and Linux systems that don't provide llvm/clang4.0
+An auxiliary repo to assist building Clasp on OS X and Linux systems that don't provide llvm/clang4.0
 ===============
 
 Updated June 29, 2017:
@@ -22,7 +22,7 @@ I have not recently tried to build Clasp with the stock Xcode 8.3.3 - I use exte
 
 Otherwise feel free to use externals-clasp
 
-**Building externals-clasp**
+### Building externals-clasp
 
 _You need to have gcc 4.8 or higher to build externals-clasp._
 
