@@ -18,7 +18,7 @@ I have not recently tried to build Clasp with the stock Xcode 8.3.3 - I use exte
 
 ### Is externals-clasp needed on Linux?
 
-**Answer:** If your package manager provides llvm/clang-4.0 use those and don't use externals-clasp.
+**Answer:** If your package manager provides llvm/clang-4.0 use those - they are more convenient.
 
 Otherwise feel free to use externals-clasp
 
