@@ -1,4 +1,4 @@
-**externals-clasp**
+#externals-clasp - an auxiliary repo to assist building Clasp on systems that don't provide llvm/clang4.0 through their package manager
 ===============
 
 Updated June 29, 2017:
