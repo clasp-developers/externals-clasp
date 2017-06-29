@@ -1,11 +1,16 @@
 **externals-clasp**
 ===============
 
-Update Aug 18, 2016:   **This repo now only builds the version of llvm/clang required to build Clasp**
+Updated June 29, 2017:
+
+**This repo now only builds the version of llvm/clang required to build Clasp**
+
+Use the branch of this repo that matches the branch of Clasp you want to build.
 
 Clasp can be found at:   https://github.com/drmeister/clasp
 
-I am working to eliminate the need for externals-clasp when installing clasp and rely on a standard version of llvm/clang. Currently externals-clasp incorporates a recent patch for llvm/clang.
+I am waiting for Apple to upgrade Xcode (currently I use Xcode 8.3.3) to the point where it can build and link Clasp.
+Currently externals-clasp incorporates a recent patch for llvm/clang.
 
 **Building externals-clasp**
 

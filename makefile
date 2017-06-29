@@ -25,11 +25,12 @@ export EXTERNALS_INTERNAL_BUILD_TARGET_DIR = $(TOP)/build
 
 export PATH := $(PATH):$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/release/bin:$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/common/bin
 
-export LLVM_VERSION_ID ?= 39
+export LLVM_VERSION_ID ?= 40
 export LLVM_VERSION_ID := $(or $(filter $(LLVM_VERSION_ID), 36 ),\
 				$(filter $(LLVM_VERSION_ID), 37 ), \
 				$(filter $(LLVM_VERSION_ID), 38 ), \
 				$(filter $(LLVM_VERSION_ID), 39 ), \
+				$(filter $(LLVM_VERSION_ID), 40 ), \
 				$(error Invalid LLVM_VERSION_ID: $(LLVM_VERSION_ID) ))
 export LLVM_VERSION = llvm$(LLVM_VERSION_ID)
 
@@ -101,8 +102,6 @@ LLDB_SOURCE_DIR = lldb
 
 #export LLVM_SOURCE_DIR = llvm$(LLVM_VERSION_ID)
 
-export LLVM_SOURCE_DIR = llvm39ToT
-
 
 ## October 21, 2016
 #export LLVM_COMMIT = 13656b412f6d3095c81dd3916e80c5dcf59b05dc
@@ -110,11 +109,18 @@ export LLVM_SOURCE_DIR = llvm39ToT
 #export CLANG_TOOLS_EXTRA_COMMIT = ce95fe531f66b8335bec3f00358a7048f7ad166b
 
 # December 28, 2016
-export LLVM_COMMIT = c54021df3fd4d71d822b3112cba4e43d94927378
-export CLANG_COMMIT = 715c2ef7122c091bc6f5899a6120deb5390a6fac
-export CLANG_TOOLS_EXTRA_COMMIT = 046e611b264a4e6471f070b1e0ed1360ef02c7d5
+#export LLVM_COMMIT = c54021df3fd4d71d822b3112cba4e43d94927378
+#export CLANG_COMMIT = 715c2ef7122c091bc6f5899a6120deb5390a6fac
+#export CLANG_TOOLS_EXTRA_COMMIT = 046e611b264a4e6471f070b1e0ed1360ef02c7d5
 
+# llvm version 4.0  yayyyy!
+#  These commit hashes are all for release_40 of each package
+export LLVM_COMMIT = 08142cb734b8d2cefec8b1629f6bb170b3f94610
+export CLANG_COMMIT = 559aa046fe3260d8640791f2249d7b0d458b5700
+export CLANG_TOOLS_EXTRA_COMMIT = a54885bd540dd3c35fc166e3fe4aabe53c8f570b
+export COMPILER_RT = 1fdc27db84c9d0d9ae4ae60185629e8c43b4a11c
 
+export LLVM_SOURCE_DIR = llvm40ToT
 
 gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
@@ -122,7 +128,7 @@ gitllvm:
 	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
 
 git-compiler-rt:
-	git clone https://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt
+	./fetch-revision.sh http://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt $(COMPILER_RT)
 
 gitlibcxx:
 	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
@@ -132,35 +138,6 @@ gitllvm-latest:
 	git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
 	git clone http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang
 	git clone http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras
-
-
-#
-# Load llvm, clang and extras
-# Apply patch D18035:   http://reviews.llvm.org/D18035
-oldgitllvm:
-	-git clone http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR)
-	-(cd $(LLVM_SOURCE_DIR); git reset --hard $(LLVM_COMMIT))
-	-(cd $(LLVM_SOURCE_DIR)/tools; git clone http://llvm.org/git/clang.git clang)
-	-(cd $(LLVM_SOURCE_DIR)/tools/clang; git reset --hard $(CLANG_COMMIT))
-	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools; git clone http://llvm.org/git/clang-tools-extra extras)
-	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools/extras; git reset --hard $(CLANG_TOOLS_EXTRA_COMMIT))
-#	-patch -d $(LLVM_SOURCE_DIR)/tools/clang -Np0 < patches/D18035.patch
-#       -(cd $(LLVM_SOURCE_DIR)/tools; git clone http://llvm.org/git/lldb.git lldb)
-
-
-## Don't get lldb for now - it's a hastle to build
-gitllvm-version:
-	-git clone -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/llvm $(LLVM_SOURCE_DIR) 
-	-(cd $(LLVM_SOURCE_DIR)/tools; git clone -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/clang clang)
-#	-(cd $(LLVM_SOURCE_DIR)/tools; git clone -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/lldb lldb)
-	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools; git clone -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/clang-tools-extra extras)
-
-# Only get --depth 1
-gitllvm-shallow:
-	-git clone --depth 1 -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/llvm $(LLVM_SOURCE_DIR) 
-	-(cd $(LLVM_SOURCE_DIR)/tools; git clone --depth 1 -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/clang clang)
-	-(cd $(LLVM_SOURCE_DIR)/tools; git clone --depth 1 -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/lldb lldb)
-	-(cd $(LLVM_SOURCE_DIR)/tools/clang/tools; git clone --depth 1 -b release_$(LLVM_VERSION_ID) https://github.com/llvm-mirror/clang-tools-extra extras)
 
 
 
@@ -355,13 +332,13 @@ llvm-setup-debug:
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
-			-DLLVM_USE_SANITIZER=Address \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DLLVM_BINUTILS_INCDIR=/usr/include \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			.. )
 
+#			-DLLVM_USE_SANITIZER=Address \
 
 #			-DCMAKE_C_COMPILER:STRING=$(GCC_EXECUTABLE) 
 #			-DCMAKE_CXX_COMPILER:STRING=$(GXX_EXECUTABLE) 
