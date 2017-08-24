@@ -25,12 +25,9 @@ export EXTERNALS_INTERNAL_BUILD_TARGET_DIR = $(TOP)/build
 
 export PATH := $(PATH):$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/release/bin:$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/common/bin
 
-export LLVM_VERSION_ID ?= 40
-export LLVM_VERSION_ID := $(or $(filter $(LLVM_VERSION_ID), 36 ),\
-				$(filter $(LLVM_VERSION_ID), 37 ), \
-				$(filter $(LLVM_VERSION_ID), 38 ), \
-				$(filter $(LLVM_VERSION_ID), 39 ), \
-				$(filter $(LLVM_VERSION_ID), 40 ), \
+export LLVM_VERSION_ID ?= 50
+export LLVM_VERSION_ID := $(or  $(filter $(LLVM_VERSION_ID), 40 ), \
+				$(filter $(LLVM_VERSION_ID), 50 ), \
 				$(error Invalid LLVM_VERSION_ID: $(LLVM_VERSION_ID) ))
 export LLVM_VERSION = llvm$(LLVM_VERSION_ID)
 
@@ -115,12 +112,18 @@ LLDB_SOURCE_DIR = lldb
 
 # llvm version 4.0  yayyyy!
 #  These commit hashes are all for release_40 of each package
-export LLVM_COMMIT = 08142cb734b8d2cefec8b1629f6bb170b3f94610
-export CLANG_COMMIT = 559aa046fe3260d8640791f2249d7b0d458b5700
-export CLANG_TOOLS_EXTRA_COMMIT = a54885bd540dd3c35fc166e3fe4aabe53c8f570b
-export COMPILER_RT = 1fdc27db84c9d0d9ae4ae60185629e8c43b4a11c
+#export LLVM_COMMIT = 08142cb734b8d2cefec8b1629f6bb170b3f94610
+#export CLANG_COMMIT = 559aa046fe3260d8640791f2249d7b0d458b5700
+#export CLANG_TOOLS_EXTRA_COMMIT = a54885bd540dd3c35fc166e3fe4aabe53c8f570b
+#export COMPILER_RT = 1fdc27db84c9d0d9ae4ae60185629e8c43b4a11c
 
-export LLVM_SOURCE_DIR = llvm40ToT
+# llvm version 5.0 Aug 22
+export LLVM_COMMIT = 0bc70c306ccbf483a029a25a6fd851bc332accff
+export CLANG_COMMIT = 8e4862b5be221092291aaf7ea40d72274acb9d96
+export CLANG_TOOLS_EXTRA_COMMIT = e8e7da5b0c98685b16b4a9b601549d18430a3fb2
+export COMPILER_RT = e6bb43d8b68ab16a71b060fc32fcba18d20f8828
+
+export LLVM_SOURCE_DIR = llvm50
 
 gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
@@ -330,7 +333,9 @@ llvm-setup-debug:
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
+			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DLLVM_BINUTILS_INCDIR=/usr/include \
