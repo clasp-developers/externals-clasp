@@ -1,0 +1,13 @@
+diff --git a/include/llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h b/include/llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h
+index e1016ef95f0..c62fece80d7 100644
+--- a/include/llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h
++++ b/include/llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h
+@@ -100,7 +100,7 @@ public:
+ 
+   /// @brief Functor for receiving object-loaded notifications.
+   using NotifyLoadedFtor = std::function<void(ObjHandleT, const ObjectPtr &Obj,
+-                                              const LoadedObjectInfo &)>;
++                                              const RuntimeDyld::LoadedObjectInfo /*LoadedObjectInfo*/ &)>;
+ 
+   /// @brief Functor for receiving finalization notifications.
+   using NotifyFinalizedFtor = std::function<void(ObjHandleT)>;

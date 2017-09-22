@@ -132,6 +132,10 @@ gitllvm:
 
 git-compiler-rt:
 	./fetch-revision.sh http://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt $(COMPILER_RT)
+	make llvm_patch
+
+llvm_patch:
+	(cd $(LLVM_SOURCE_DIR); patch -p1 <../patches/llvm5-orc-notifier.patch)
 
 gitlibcxx:
 	-(cd $(LLVM_SOURCE_DIR)/projects; git clone https://github.com/llvm-mirror/libcxx.git libcxx)
@@ -333,7 +337,6 @@ llvm-setup-debug:
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
-			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
@@ -358,6 +361,7 @@ llvm-setup-release:
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DLLVM_BINUTILS_INCDIR=/usr/include \
@@ -402,6 +406,7 @@ llvm-setup-debug:
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
+			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
@@ -414,14 +419,18 @@ llvm-setup-debug:
 #			-DCMAKE_CXX_COMPILER:STRING=$(GXX_EXECUTABLE) 
 #		export LINKFLAGS="-L$(PYTHON_LIB)"; 
 #darwin
+#
+# Was Release
 llvm-setup-release:
 	-mkdir -p $(LLVM_SOURCE_DIR)/build-release
 	(cd $(LLVM_SOURCE_DIR)/build-release; \
-		cmake -DCMAKE_BUILD_TYPE:STRING="Release" \
+		export CXXFLAGS=-DLLVM_ENABLE_DUMP; \
+		cmake -DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
 			-DCMAKE_INSTALL_PREFIX:STRING=$(CLASP_APP_RESOURCES_EXTERNALS_RELEASE_DIR) \
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
+			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
