@@ -100,23 +100,6 @@ LLDB_SOURCE_DIR = lldb
 #export LLVM_SOURCE_DIR = llvm$(LLVM_VERSION_ID)
 
 
-## October 21, 2016
-#export LLVM_COMMIT = 13656b412f6d3095c81dd3916e80c5dcf59b05dc
-#export CLANG_COMMIT = a663b0aee8fef8552996f03415d3e48ee72e838f
-#export CLANG_TOOLS_EXTRA_COMMIT = ce95fe531f66b8335bec3f00358a7048f7ad166b
-
-# December 28, 2016
-#export LLVM_COMMIT = c54021df3fd4d71d822b3112cba4e43d94927378
-#export CLANG_COMMIT = 715c2ef7122c091bc6f5899a6120deb5390a6fac
-#export CLANG_TOOLS_EXTRA_COMMIT = 046e611b264a4e6471f070b1e0ed1360ef02c7d5
-
-# llvm version 4.0  yayyyy!
-#  These commit hashes are all for release_40 of each package
-#export LLVM_COMMIT = 08142cb734b8d2cefec8b1629f6bb170b3f94610
-#export CLANG_COMMIT = 559aa046fe3260d8640791f2249d7b0d458b5700
-#export CLANG_TOOLS_EXTRA_COMMIT = a54885bd540dd3c35fc166e3fe4aabe53c8f570b
-#export COMPILER_RT = 1fdc27db84c9d0d9ae4ae60185629e8c43b4a11c
-
 # llvm version 5.0 Aug 22
 export LLVM_COMMIT = 0bc70c306ccbf483a029a25a6fd851bc332accff
 export CLANG_COMMIT = 8e4862b5be221092291aaf7ea40d72274acb9d96
