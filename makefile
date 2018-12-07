@@ -25,9 +25,8 @@ export EXTERNALS_INTERNAL_BUILD_TARGET_DIR = $(TOP)/build
 
 export PATH := $(PATH):$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/release/bin:$(EXTERNALS_INTERNAL_BUILD_TARGET_DIR)/common/bin
 
-export LLVM_VERSION_ID ?= 50
-export LLVM_VERSION_ID := $(or  $(filter $(LLVM_VERSION_ID), 40 ), \
-				$(filter $(LLVM_VERSION_ID), 50 ), \
+export LLVM_VERSION_ID ?= 60
+export LLVM_VERSION_ID := $(or  $(filter $(LLVM_VERSION_ID), 60 ), \
 				$(error Invalid LLVM_VERSION_ID: $(LLVM_VERSION_ID) ))
 export LLVM_VERSION = llvm$(LLVM_VERSION_ID)
 
@@ -101,12 +100,18 @@ LLDB_SOURCE_DIR = lldb
 
 
 # llvm version 5.0 Aug 22
-export LLVM_COMMIT = 0bc70c306ccbf483a029a25a6fd851bc332accff
-export CLANG_COMMIT = 8e4862b5be221092291aaf7ea40d72274acb9d96
-export CLANG_TOOLS_EXTRA_COMMIT = e8e7da5b0c98685b16b4a9b601549d18430a3fb2
-export COMPILER_RT = e6bb43d8b68ab16a71b060fc32fcba18d20f8828
+#export LLVM_COMMIT = 0bc70c306ccbf483a029a25a6fd851bc332accff
+#export CLANG_COMMIT = 8e4862b5be221092291aaf7ea40d72274acb9d96
+#export CLANG_TOOLS_EXTRA_COMMIT = e8e7da5b0c98685b16b4a9b601549d18430a3fb2
+#export COMPILER_RT = e6bb43d8b68ab16a71b060fc32fcba18d20f8828
 
-export LLVM_SOURCE_DIR = llvm50
+
+export LLVM_COMMIT = 5136df4d089a086b70d452160ad5451861269498
+export CLANG_COMMIT = 2f27999df400d17b33cdd412fdd606a88208dfcc 
+export CLANG_TOOLS_EXTRA_COMMIT = 0ea5aed4817afebb7fbdea644b723052a0ef370c
+export COMPILER_RT = f0835eb0195c477ca9bfb5a782eff9be6cb0bfee
+
+export LLVM_SOURCE_DIR = llvm60
 
 gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
