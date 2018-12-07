@@ -117,11 +117,11 @@ gitllvm:
 	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
 	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
-	make llvm_patch
+#	make llvm_patch
 
 git-compiler-rt:
 	./fetch-revision.sh http://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt $(COMPILER_RT)
-	make llvm_patch
+#	make llvm_patch
 
 llvm_patch:
 	(cd $(LLVM_SOURCE_DIR); patch -p1 <../patches/llvm5-orc-notifier.patch)
