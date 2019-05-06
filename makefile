@@ -106,22 +106,24 @@ LLDB_SOURCE_DIR = lldb
 #export COMPILER_RT = e6bb43d8b68ab16a71b060fc32fcba18d20f8828
 
 
-export LLVM_COMMIT = 5136df4d089a086b70d452160ad5451861269498
-export CLANG_COMMIT = 2f27999df400d17b33cdd412fdd606a88208dfcc 
-export CLANG_TOOLS_EXTRA_COMMIT = 0ea5aed4817afebb7fbdea644b723052a0ef370c
-export COMPILER_RT = f0835eb0195c477ca9bfb5a782eff9be6cb0bfee
+# llvm version 6.0
+#export LLVM_COMMIT = 5136df4d089a086b70d452160ad5451861269498
+#export CLANG_COMMIT = 2f27999df400d17b33cdd412fdd606a88208dfcc 
+#export CLANG_TOOLS_EXTRA_COMMIT = 0ea5aed4817afebb7fbdea644b723052a0ef370c
+#export COMPILER_RT = f0835eb0195c477ca9bfb5a782eff9be6cb0bfee
 
-export LLVM_SOURCE_DIR = llvm60
+
+#llvm version 8.0
+export LLVM_COMMIT = 604a4178228c4b39c635a262a8faf9025cc31274
+
+export LLVM_SOURCE_DIR = llvmtot
+
+gitllvm-revision:
+	./fetch-revision.sh https://github.com/llvm/llvm-project $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
+#	make llvm_patch
 
 gitllvm:
-	./fetch-revision.sh http://llvm.org/git/llvm.git $(LLVM_SOURCE_DIR) $(LLVM_COMMIT)
-	./fetch-revision.sh http://llvm.org/git/clang.git $(LLVM_SOURCE_DIR)/tools/clang $(CLANG_COMMIT)
-	./fetch-revision.sh http://llvm.org/git/clang-tools-extra.git $(LLVM_SOURCE_DIR)/tools/clang/tools/extras $(CLANG_TOOLS_EXTRA_COMMIT)
-#	make llvm_patch
-
-git-compiler-rt:
-	./fetch-revision.sh http://github.com/llvm-mirror/compiler-rt.git $(LLVM_SOURCE_DIR)/projects/compiler-rt $(COMPILER_RT)
-#	make llvm_patch
+	git clone https://github.com/llvm/llvm-project $(LLVM_SOURCE_DIR)
 
 llvm_patch:
 	(cd $(LLVM_SOURCE_DIR); patch -p1 <../patches/llvm5-orc-notifier.patch)
@@ -318,18 +320,22 @@ llvm-setup-debug:
 	-mkdir -p $(LLVM_SOURCE_DIR)/build-debug
 	(cd $(LLVM_SOURCE_DIR)/build-debug; \
 		cmake -DCMAKE_BUILD_TYPE:STRING="Debug" \
+			-DLLVM_ENABLE_PROJECTS=clang \
+			-DLLVM_EXTERNAL_CLANG_SOURCE_DIR:PATH=/Users/meister/Development/externals-clasp/llvmtot/clang \
+			-G "Unix Makefiles" \
 			-DCMAKE_INSTALL_PREFIX:STRING=$(CLASP_APP_RESOURCES_EXTERNALS_DEBUG_DIR) \
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
-			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_DUMP:BOOL=true \
+			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_INSTALL_TOOLCHAIN_ONLY:BOOL=false \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
-			-DLLVM_BINUTILS_INCDIR=/usr/include \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
-			.. )
+			-DLLVM_BINUTILS_INCDIR=/usr/include \
+			../llvm )
 
 #			-DLLVM_USE_SANITIZER=Address \
 
@@ -339,20 +345,24 @@ llvm-setup-debug:
 #linux
 llvm-setup-release:
 	-mkdir -p $(LLVM_SOURCE_DIR)/build-release
-	(cd $(LLVM_SOURCE_DIR)/build-release; \
+	(cd $(LLVM_SOURCE_DIR)/build-release; echo `pwd`\
 		cmake -DCMAKE_BUILD_TYPE:STRING="Release" \
+			-DLLVM_ENABLE_PROJECTS=clang \
+			-DLLVM_EXTERNAL_CLANG_SOURCE_DIR:PATH=$HOME/Development/externals-clasp/llvmtot/clang \
+			-G "Unix Makefiles" \
 			-DCMAKE_INSTALL_PREFIX:STRING=$(CLASP_APP_RESOURCES_EXTERNALS_RELEASE_DIR) \
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
-			-DLLVM_BUILD_TOOLS:BOOL=true \
 			-DLLVM_ENABLE_DUMP:BOOL=true \
+			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_INSTALL_TOOLCHAIN_ONLY:BOOL=false \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
-			-DLLVM_BINUTILS_INCDIR=/usr/include \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
-			.. )
+			-DLLVM_BINUTILS_INCDIR=/usr/include \
+			../llvm )
 
 #../configure --enable-targets=x86_64  --enable-optimized --enable-assertions \
 #		--with-gcc-toolchain=$(GCC_TOOLCHAIN) \
@@ -387,17 +397,21 @@ llvm-setup-debug:
 	-mkdir -p $(LLVM_SOURCE_DIR)/build-debug
 	(cd $(LLVM_SOURCE_DIR)/build-debug; \
 		cmake -DCMAKE_BUILD_TYPE:STRING="Debug" \
+			-DLLVM_ENABLE_PROJECTS=clang \
+			-DLLVM_EXTERNAL_CLANG_SOURCE_DIR:PATH=/Users/meister/Development/externals-clasp/llvmtot//clang \
+			-G "Unix Makefiles" \
 			-DCMAKE_INSTALL_PREFIX:STRING=$(CLASP_APP_RESOURCES_EXTERNALS_DEBUG_DIR) \
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_INSTALL_TOOLCHAIN_ONLY:BOOL=false \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
-			.. )
+			../llvm )
 
 #			-DLLVM_USE_SANITIZER=Address \
 #			-DCMAKE_C_COMPILER:STRING=$(GCC_EXECUTABLE) 
@@ -411,17 +425,21 @@ llvm-setup-release:
 	(cd $(LLVM_SOURCE_DIR)/build-release; \
 		export CXXFLAGS=-DLLVM_ENABLE_DUMP; \
 		cmake -DCMAKE_BUILD_TYPE:STRING="RelWithDebInfo" \
+			-DLLVM_ENABLE_PROJECTS=clang \
+			-DLLVM_EXTERNAL_CLANG_SOURCE_DIR:PATH=/Users/meister/Development/externals-clasp/llvmtot/clang \
+			-G "Unix Makefiles" \
 			-DCMAKE_INSTALL_PREFIX:STRING=$(CLASP_APP_RESOURCES_EXTERNALS_RELEASE_DIR) \
 			-DLLVM_BUILD_LLVM_DYLIB:BOOL=false \
 			-DLLVM_PARALLEL_COMPILE_JOBS:STRING=$(PJOBS) \
 			-DLLVM_ENABLE_CXX11:BOOL=true \
 			-DLLVM_ENABLE_DUMP:BOOL=true \
 			-DLLVM_BUILD_TOOLS:BOOL=true \
+			-DLLVM_INSTALL_TOOLCHAIN_ONLY:BOOL=false \
 			-DLLVM_ENABLE_RTTI:BOOL=true \
 			-DLLVM_TARGETS_TO_BUILD:STRING="X86" \
 			-DCMAKE_CXX_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
 			-DCMAKE_C_FLAGS:STRING="-I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" \
-			.. )
+			../llvm )
 
 #			-DCMAKE_CXX_FLAGS:STRING="-static-libstdc++ -static-libgcc -I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" 
 #			-DCMAKE_C_FLAGS:STRING="-static-libgcc -I$(CLASP_APP_RESOURCES_EXTERNALS_COMMON_INCLUDE_DIR)" 
