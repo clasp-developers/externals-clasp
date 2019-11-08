@@ -5,6 +5,9 @@ export EXTERNALS_CLASP_HOME ?= $(shell pwd)
 export PJOBS ?= 1
 
 include $(wildcard $(EXTERNALS_CLASP_HOME)/local.config)
+ifndef PJOBS
+	PJOBS=1
+endif
 
 export BUILTIN_INCLUDES ?= /Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
 
