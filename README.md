@@ -1,3 +1,5 @@
+This is no longer needed to build Clasp!
+
 # externals-clasp
 ===============
 
